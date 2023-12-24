@@ -1,0 +1,149 @@
+{
+    "sections": [
+        {
+            "sectionName": "Devil 😈",
+            "coupons": [
+                {
+                    "description": "Cold feet on back",
+                    "amount": 100,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/20210823_002458.jpg"
+                },
+                {
+                    "description": "Cold feet on stomach",
+                    "amount": 100,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/20230716_231925.jpg"
+                },
+                {
+                    "description": "Get out of bed early",
+                    "amount": 25,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/311574728_1810283185986837_1560442478953348956_n.jpg"
+                },
+                {
+                    "description": "Free tickle start",
+                    "amount": 50,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/20230710_111443.jpg"
+                },
+                {
+                    "description": "Quick time event with orange",
+                    "amount": 50,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/48363565_781051425576690_8408743485288480768_n.jpg"
+                }
+            ]
+        },
+        {
+            "sectionName": "Angcare 💅",
+            "coupons": [
+                {
+                    "description": "Cream rub",
+                    "amount": 200,
+                    "imageSrc": ""
+                },
+                {
+                    "description": "Hair pat",
+                    "amount": 350,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/20220212_221854.jpg"
+                },
+                {
+                    "description": "Hair brush",
+                    "amount": 100,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/20230506_154704.jpg"
+                },
+                {
+                    "description": "Broken leg replacement service",
+                    "amount": 350,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/20211231_002021.jpg"
+                },
+                {
+                    "description": "Good scents from the mall",
+                    "amount": 10,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/20211231_002021.jpg"
+                }
+            ]
+        },
+        {
+            "sectionName": "Barn 🐎",
+            "coupons": [
+                {
+                    "description": "Free pony shack visit",
+                    "amount": 100,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/FB_IMG_1703361155159.jpg"
+                },
+                {
+                    "description": "Course set up",
+                    "amount": 30,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/VideoCapture_20231224-015658.jpg"
+                },
+                {
+                    "description": "Blanket wash",
+                    "amount": 5,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/20231016_173438.jpg"
+                },
+                {
+                    "description": "Pony brushing",
+                    "amount": 10,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/VideoCapture_20231224-020644.jpg"
+                },
+                {
+                    "description": "Pony video shoot",
+                    "amount": 15,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/FB_IMG_1703361163728.jpg"
+                }
+            ]
+        },
+        {
+            "sectionName": "Chores 🧺🧹",
+            "coupons": [
+                {
+                    "description": "Car cleanup",
+                    "amount": 5,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/20221204_125428.jpg"
+                },
+                {
+                    "description": "Stair vacuum",
+                    "amount": 15,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/20220724_170334.jpg"
+                },
+                {
+                    "description": "Bathroom clean-up",
+                    "amount": 30,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/20210507_225914.jpg"
+                },
+                {
+                    "description": "Laundry service",
+                    "amount": 30,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/20211229_183500.jpg"
+                }
+            ]
+        },
+        {
+            "sectionName": "Fun times 🎡",
+            "coupons": [
+                {
+                    "description": "Multi-part meal",
+                    "amount": 40,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/Snapchat-1831418454.jpg"
+                },
+                {
+                    "description": "New restaurant",
+                    "amount": 20,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/20230708_094943.jpg"
+                },
+                {
+                    "description": "Ski date",
+                    "amount": 5,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/IMG_2009.JPG"
+                },
+                {
+                    "description": "Wonderland date",
+                    "amount": 2,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/20210305_181807.jpg"
+                },
+                {
+                    "description": "Karmactivity",
+                    "amount": 30,
+                    "imageSrc": "https://personal-nolan.s3.us-east-2.amazonaws.com/ang-coupons-2023/20200818_190016.jpg"
+                }
+            ]
+        }
+    ]
+}
