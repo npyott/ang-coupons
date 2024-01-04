@@ -2,6 +2,12 @@ import DynamoDB, { AttributeValue } from "aws-sdk/clients/dynamodb";
 
 import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from "./config";
 
+export class ObjectTypeUnimplementedError extends Error {
+    constructor(obj: any) {
+        super(`Unimplemented object ${obj}`);
+    }
+}
+
 export class AttributeTypeUnimplementedError extends Error {
     constructor(attribute: keyof AttributeValue) {
         super(`Unimplemented type: ${attribute}`);
@@ -70,6 +76,8 @@ export const jsObectToAttributeValue = (x: any): AttributeValue => {
             ),
         };
     }
+
+    throw new ObjectTypeUnimplementedError(x);
 };
 
 export const attributeValueToJSObject = (x: AttributeValue) => {
@@ -79,10 +87,6 @@ export const attributeValueToJSObject = (x: AttributeValue) => {
         if (x[unsupportedValueType]) {
             throw new AttributeTypeUnimplementedError(unsupportedValueType);
         }
-    }
-
-    if (x.NS) {
-        throw new AttributeTypeUnimplementedError("NS");
     }
 
     if (x.BOOL) {
