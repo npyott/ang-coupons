@@ -1,0 +1,19 @@
+{
+    "name": "ang-coupons-2023-server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "server.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "aws-sdk": "^2.1531.0"
+    },
+    "devDependencies": {
+        "@types/ang-coupons-2023": "file:../types",
+        "@types/node": "^20.10.6"
+    }
+}

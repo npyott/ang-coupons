@@ -1,6 +1,6 @@
 import DynamoDB, { AttributeValue } from "aws-sdk/clients/dynamodb";
 
-import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from "./config";
+import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from "../scripting/config";
 
 export class ObjectTypeUnimplementedError extends Error {
     constructor(obj: any) {
