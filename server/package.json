@@ -14,6 +14,6 @@
     },
     "devDependencies": {
         "@types/ang-coupons-2023": "file:../types",
-        "@types/node": "^20.10.6"
+        "@types/node": "^20.12.7"
     }
 }
