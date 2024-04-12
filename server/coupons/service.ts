@@ -1,29 +1,41 @@
-import { Coupon } from "ang-coupons-2023/coupons";
+import { Coupon } from "ang-coupons-2023";
 
 import { generateID } from "../util";
-import { dynamoDB, jsObectToAttributeValue } from "../aws";
-
-import { PREFIX, TABLE_NAME } from "./constants";
+import { putItem, updateItem } from "../aws";
 
 export const createCoupon = async (
-    options: Pick<Coupon, "description" | "imageSrc" | "limit" | "section">
+    options: Pick<
+        Coupon,
+        | "description"
+        | "imageSrc"
+        | "limit"
+        | "group"
+        | "requestValidDuration"
+        | "responders"
+    >
 ) => {
     const date = new Date();
 
-    const coupon: Coupon = {
+    return await putItem({
         ...options,
-        _id: generateID(PREFIX),
+        _id: generateID("coupon"),
         usage: 0,
         createdAt: new Date(date),
         updatedAt: new Date(date),
-    };
-
-    await dynamoDB
-        .putItem({
-            Item: jsObectToAttributeValue(coupon).M!,
-            TableName: TABLE_NAME,
-        })
-        .promise();
-
-    return coupon;
+    });
 };
+
+export const updateCoupon = async (
+    id: Coupon["_id"],
+    options: Pick<
+        Coupon,
+        "group" | "limit" | "requestValidDuration" | "imageSrc" | "description"
+    >
+) => {
+    return await updateItem(id, options, {}, {}, TABLE_NAME);
+};
+
+export const updateCouponUsage = async (
+    id: Coupon["_id"],
+    increment: number
+) => {};
