@@ -1,35 +1,52 @@
 import { APIRequest, APIResponse } from "./request/models";
 
-const resources = [
-    'test',
-    'coupon',
-    'section'
-] as const;
-
-export type Resource = (typeof resources)[number];
+import { Prefix } from "ang-coupons-2023";
 
 const unimplementedHandler = async () => ({
     statusCode: 404,
     body: JSON.stringify({
-        error: "Path unimplemented."
-    })
+        error: "Path unimplemented.",
+    }),
 });
 
-const handlers: Record<Resource, (event: APIRequest) => Promise<APIResponse>> = {
+const handlers: Record<
+    Prefix | "test",
+    (event: APIRequest) => Promise<APIResponse>
+> = {
     test: async (event) => ({
         statusCode: 200,
-        body: JSON.stringify(event)
+        body: JSON.stringify(event),
     }),
     coupon: unimplementedHandler,
-    section: unimplementedHandler
-}
+    coupon_group: unimplementedHandler,
+    coupon_request: unimplementedHandler,
+    user: unimplementedHandler,
+    user_group: unimplementedHandler,
+    perm: unimplementedHandler,
+};
 
-const handler = async (event: APIRequest): Promise<APIResponse> => {
+const validPrefix = (value: string): value is Prefix => {
+    const prefixes: Prefix[] = [
+        "user",
+        "user_group",
+        "coupon",
+        "coupon_group",
+        "coupon_request",
+    ];
+
+    return prefixes.some((prefix) => prefix === value);
+};
+
+export const handler = async (event: APIRequest): Promise<APIResponse> => {
     // TODO implement
     const resource = event.headers.resource;
     const resourceID = event.headers.resourceID;
-   
-    const res = await (handlers[resource] ?? unimplementedHandler)(event)
+
+    if (!validPrefix(resource) && resource !== "test") {
+        return await unimplementedHandler();
+    }
+
+    const res = await handlers[resource](event);
 
     return res;
 };
