@@ -6,3 +6,5 @@ localTests/*
 
 **/.env
 .env
+
+**/dist/*
