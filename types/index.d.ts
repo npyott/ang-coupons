@@ -1,7 +1,7 @@
 export type ID<PrefixT extends Prefix> = `${PrefixT}+${string}`;
 
 type CommonResource<PrefixT extends Prefix> = {
-    _id: ID<Prefix>;
+    _id: ID<PrefixT>;
     createdAt: Date;
     updatedAt: Date;
 };
@@ -21,7 +21,7 @@ export type Prefix =
 export type Resource =
     | User
     | UserGroup
-    | Permission<any>
+    | Permission
     | Coupon
     | CouponRequest
     | CouponGroup
@@ -54,23 +54,21 @@ export type ResourceGroupMethods<
               group: CouponGroup;
               resource: Coupon;
           },
-    ReadKey extends keyof RT = keyof RT,
-    RG = T["group"],
-    RT = T["resource"]
+    ReadKey extends keyof T["resource"] = keyof T["resource"]
 > = {
     add: (
-        id: Reference<RG>,
-        options: { items: Reference<RT> }
+        id: Reference<T["group"]>,
+        options: { items: Reference<T["resource"]> }
     ) => Promise<{ added: number }>;
     remove: (
-        id: Reference<RG>,
-        options: { items: Reference<RT> }
+        id: Reference<T["group"]>,
+        options: { items: Reference<T["resource"]> }
     ) => Promise<{ removed: number }>;
     listItems: (
-        id: Reference<RG>,
+        id: Reference<T["group"]>,
         skip: number,
-        list: number
-    ) => Promise<Pick<RT, ReadKey>[]>;
+        limit: number
+    ) => Promise<Pick<T["resource"], ReadKey>[]>;
 };
 
 export const UserPrefix = "user";
@@ -92,7 +90,10 @@ export type UserReadKey = keyof Pick<
     "_id" | "createdAt" | "updatedAt" | "name" | "email"
 >;
 export type UserUpdateKey = keyof Pick<User, "name" | "email">;
-export type UserMethods = ResourceMethods<User, UserUpdateKey, UserReadKey> & {
+export type UserMethods = Omit<
+    ResourceMethods<User, UserUpdateKey, UserReadKey>,
+    "list"
+> & {
     sendPasswordToken: (options: Pick<User, "email">) => Promise<boolean>;
     updatePassword: (options: {
         newPassword: string;
@@ -115,8 +116,10 @@ export type UserGroupMethods = ResourceMethods<UserGroup, UserGroupUpdateKey> &
     ResourceGroupMethods<{ group: UserGroup; resource: User }, UserReadKey>;
 
 type CommonPermissionEffect = "none" | "read" | "add" | "delete";
-type ProcessPermissionEffect = "start" | "complete";
-type ResourcePermissionEffect = CommonPermissionEffect | CouponPermissionEffect;
+type ProcessPermissionEffect = "start" | "complete" | "cancel";
+type ResourcePermissionEffect =
+    | CommonPermissionEffect
+    | ProcessPermissionEffect;
 
 type MetaPermissionEffectBase =
     `${CommonPermissionEffect}-${CommonPermissionEffect}`;
@@ -124,7 +127,7 @@ type MetaPermissionEffectAgent = `agent-${MetaPermissionEffectBase}`;
 type MetaPermissionEffectTarget = `target-${MetaPermissionEffectBase}`;
 type MetaPermissionEffect =
     | MetaPermissionEffectAgent
-    | MetaPermissionEffectAgent;
+    | MetaPermissionEffectTarget;
 
 export type PermissionEffect = ResourcePermissionEffect | MetaPermissionEffect;
 
@@ -139,11 +142,10 @@ export type Permission = CommonBasedResource<
     }
 >;
 
-export type PermissionMethods = {
-    create: (
-        options: Pick<Permission, "agents" | "target" | "effect" | "priority">
-    ) => Permission[];
-    delete: (id: Reference<Permission>) => boolean;
+export type PermissionMethods = Pick<
+    ResourceMethods<Permission, "agents" | "effect" | "target" | "priority">,
+    "create" | "delete"
+> & {
     listPermissions: (options: Reference<Resource>) => Permission[];
 };
 
@@ -160,30 +162,10 @@ export type Coupon = CommonBasedResource<
     }
 >;
 
-export type CouponMethods = {
-    create: (
-        options: Pick<
-            Coupon,
-            | "description"
-            | "limit"
-            | "requestValidDuration"
-            | "imageSrc"
-            | "group"
-        >
-    ) => Coupon;
-    delete: (id: Reference<Coupon>) => boolean;
-    update: (
-        id: Reference<Coupon>,
-        options: Pick<
-            Coupon,
-            | "description"
-            | "limit"
-            | "requestValidDuration"
-            | "imageSrc"
-            | "group"
-        >
-    ) => Coupon;
-};
+export type CouponMethods = ResourceMethods<
+    Coupon,
+    "description" | "limit" | "requestValidDuration" | "imageSrc" | "group"
+>;
 
 export const CouponRequestPrefix = "coupon_request";
 export type CouponRequest = CommonBasedResource<
@@ -198,13 +180,10 @@ export type CouponRequest = CommonBasedResource<
     }
 >;
 
-export type CouponRequestMethod = {
-    create: (
-        options: Pick<CouponRequest, "coupon" | "requesterNote" | "responders">
-    ) => CouponRequest;
-    cancel: (options: Pick<CouponRequest, "_id">) => boolean;
-    fulfill: (options: Pick<CouponRequest, "_id" | "responderNote">) => boolean;
-};
+export type CouponRequestMethod = Omit<
+    ResourceMethods<CouponRequest, "coupon" | "requesterNote" | "responders">,
+    "delete" | "update"
+>;
 
 export const CouponGroupPrefix = "coupon_group";
 export type CouponGroup = CommonBasedResource<
@@ -216,29 +195,11 @@ export type CouponGroup = CommonBasedResource<
     }
 >;
 
-export type CouponGroupMethods = {
-    create: (
-        options: Pick<CouponGroup, "description" | "parent">
-    ) => CouponGroup;
-    delete: (id: Reference<CouponGroup>) => boolean;
-    update: (
-        id: Reference<CouponGroup>,
-        options: Pick<CouponGroup, "description" | "parent">
-    ) => CouponGroup;
-    add: (
-        id: Reference<CouponGroup>,
-        options: { coupons: Reference<Coupon>[] }
-    ) => {
-        added: number;
-    };
-    remove: (
-        id: Reference<CouponGroup>,
-        options: { coupons: Reference<Coupon>[] }
-    ) => {
-        removed: number;
-    };
-    listItems: (id: Reference<CouponGroup>) => Coupon[];
-};
+export type CouponGroupMethods = ResourceMethods<
+    CouponGroup,
+    "description" | "parent"
+> &
+    ResourceGroupMethods<{ group: CouponGroup; resource: Coupon }>;
 
 export const SessionPrefix = "session";
 export type Session = CommonBasedResource<
