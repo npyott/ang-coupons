@@ -23,6 +23,7 @@ const handlers: Record<
     user: unimplementedHandler,
     user_group: unimplementedHandler,
     perm: unimplementedHandler,
+    session: unimplementedHandler,
 };
 
 const validPrefix = (value: string): value is Prefix => {

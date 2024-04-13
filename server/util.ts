@@ -1,4 +1,4 @@
-import { CommonResource, Prefix } from "ang-coupons-2023";
+import { ID, Prefix } from "ang-coupons-2023";
 import { randomUUID } from "crypto";
 
 export type ExtractTypedKeys<T, S> = {
@@ -27,13 +27,13 @@ export const range = (start: number, end: number, increment = 1) => {
 
 export const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-export const generateID = <P extends Prefix>(
-    prefix: P
-): CommonResource<P>["_id"] => {
+export const generateID = <P extends Prefix>(prefix: P): ID<P> => {
     const uuid = randomUUID();
 
     return `${prefix}+${uuid}`;
 };
+
+const x = generateID<RT>("user+");
 
 // From a positive integer, produces a string
 // A, B, C, ..., AA, AB, AC, ...

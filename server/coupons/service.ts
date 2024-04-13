@@ -1,4 +1,4 @@
-import { Coupon } from "ang-coupons-2023";
+import { Coupon, Reference } from "ang-coupons-2023";
 
 import { generateID } from "../util";
 import { putItem, updateItem } from "../aws";
@@ -6,12 +6,7 @@ import { putItem, updateItem } from "../aws";
 export const createCoupon = async (
     options: Pick<
         Coupon,
-        | "description"
-        | "imageSrc"
-        | "limit"
-        | "group"
-        | "requestValidDuration"
-        | "responders"
+        "description" | "imageSrc" | "limit" | "group" | "requestValidDuration"
     >
 ) => {
     const date = new Date();
@@ -26,16 +21,16 @@ export const createCoupon = async (
 };
 
 export const updateCoupon = async (
-    id: Coupon["_id"],
+    id: Reference<Coupon>,
     options: Pick<
         Coupon,
         "group" | "limit" | "requestValidDuration" | "imageSrc" | "description"
     >
 ) => {
-    return await updateItem(id, options, {}, {}, TABLE_NAME);
+    return await updateItem(id, options, {}, {});
 };
 
 export const updateCouponUsage = async (
-    id: Coupon["_id"],
+    id: Reference<Coupon>,
     increment: number
 ) => {};

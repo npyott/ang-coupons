@@ -1,5 +1,5 @@
 import DynamoDB, { AttributeValue } from "aws-sdk/clients/dynamodb";
-import { Resource } from "ang-coupons-2023";
+import { Reference, Resource } from "ang-coupons-2023";
 
 import {
     AWS_ACCESS_KEY_ID,
@@ -147,7 +147,7 @@ export const attributeValueToJSObject = (x: AttributeValue): any => {
     }
 };
 
-export const getItem = async <RT extends Resource>(id: RT["_id"]) => {
+export const getItem = async <RT extends Resource>(id: Reference<RT>) => {
     const res = await dynamoDB
         .getItem({
             Key: { _id: jsObjectToAttributeValue(id) },
@@ -174,7 +174,7 @@ export const putItem = async <RT extends Resource>(x: RT) => {
 };
 
 export const updateItem = async <RT extends Resource>(
-    key: RT["_id"],
+    key: Reference<RT>,
     set: Partial<RT>,
     inc: Partial<ExtractTypedKeys<RT, number>>,
     append: Partial<ExtractTypedKeys<RT, any[]>>
