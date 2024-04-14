@@ -1,4 +1,6 @@
-export type ID<PrefixT extends Prefix> = `${PrefixT}+${string}`;
+export type ID<PrefixT extends Prefix> = `${PrefixT}-${string}`;
+export type PrefixFromID<ID extends Reference<Resource>> =
+    ID extends `${infer PT}-${string}` ? PT : never;
 
 type CommonResource<PrefixT extends Prefix> = {
     _id: ID<PrefixT>;
@@ -36,7 +38,7 @@ export type ResourceMethods<
 > = {
     create: (options: Pick<RT, UpdateKey>) => Promise<Pick<RT, ReadKey>>;
     get: (id: Reference<RT>) => Promise<Pick<RT, ReadKey>>;
-    delete: (id: Reference<RT>) => Promise<Pick<RT, ReadKey>>;
+    delete: (id: Reference<RT>) => Promise<boolean>;
     update: (
         id: Reference<RT>,
         options: Pick<RT, UpdateKey>
@@ -215,7 +217,10 @@ export type Session = CommonBasedResource<
 >;
 
 export type SessionMethods = {
-    login: (options: { email: string; password: string }) => Session;
-    logout: (options: { session: Reference<Session> }) => void;
-    refresh: (options: { session: Reference<Session> }) => Session;
+    login: (options: {
+        email: string;
+        password: string;
+    }) => Pick<User, UserReadKey>;
+    logout: () => void;
+    refresh: () => Pick<User, UserReadKey>;
 };
