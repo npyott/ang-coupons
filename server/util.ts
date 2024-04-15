@@ -33,8 +33,6 @@ export const generateID = <P extends Prefix>(prefix: P): ID<P> => {
     return `${prefix}+${uuid}`;
 };
 
-const x = generateID<RT>("user+");
-
 // From a positive integer, produces a string
 // A, B, C, ..., AA, AB, AC, ...
 export const alphabetNumber = (n: number): string => {
