@@ -1,9 +1,9 @@
 import {
-    ID,
-    Prefix,
+    GroupedResource,
     PrefixFromID,
     Reference,
     Resource,
+    ResourceGroupMethods,
     ResourceMethods,
 } from "ang-coupons-2023";
 
@@ -95,23 +95,18 @@ export const defaultResourceImplementation = <
 >(
     prefix: PrefixFromID<Reference<RT>>,
     authenticatedFetch: ReturnType<typeof createAuthenticatedFetch>,
-    validator: (res: unknown) => res is Pick<RT, ReadKey> = (
-        _res
-    ): _res is Pick<RT, ReadKey> => true
+    validResponse: (res: unknown) => Pick<RT, ReadKey> = (res) =>
+        res as Pick<RT, ReadKey>
 ): ResourceMethods<RT, UpdateKey, ReadKey> => ({
     async create(options) {
         const res = await authenticatedFetch({
             path: `/${prefix}`,
-            method: "PUT",
+            method: "POST",
             body: options,
             contentType: "application/json",
         });
 
-        if (validator(res)) {
-            return res;
-        }
-
-        throw new UnimplementedError();
+        return validResponse(res);
     },
     async get(id) {
         const res = await authenticatedFetch({
@@ -119,11 +114,7 @@ export const defaultResourceImplementation = <
             method: "GET",
         });
 
-        if (validator(res)) {
-            return res;
-        }
-
-        throw new UnimplementedError();
+        return validResponse(res);
     },
     async delete(id) {
         const res = await authenticatedFetch({
@@ -145,11 +136,7 @@ export const defaultResourceImplementation = <
             contentType: "application/json",
         });
 
-        if (validator(res)) {
-            return res;
-        }
-
-        throw new UnimplementedError();
+        return validResponse(res);
     },
     async list(skip, limit) {
         const res = await authenticatedFetch({
@@ -165,10 +152,77 @@ export const defaultResourceImplementation = <
             throw new UnimplementedError();
         }
 
-        if (res.every(validator)) {
-            return res;
+        return res.map(validResponse);
+    },
+});
+
+export const defaultResourceGroupImplementation = <
+    GroupT extends GroupedResource,
+    ReadKey extends keyof GroupT["resource"] = keyof GroupT["resource"]
+>(
+    prefix: PrefixFromID<Reference<GroupT["group"]>>,
+    authenticatedFetch: ReturnType<typeof createAuthenticatedFetch>,
+    validResourceResponse: (
+        res: unknown
+    ) => Pick<GroupT["resource"], ReadKey> = (res) =>
+        res as Pick<GroupT["resource"], ReadKey>
+): ResourceGroupMethods<GroupT, ReadKey> => ({
+    async add(id, options) {
+        const res = await authenticatedFetch({
+            path: `/${prefix}/${id}`,
+            method: "PUT",
+            body: options,
+            contentType: "application/json",
+        });
+
+        if (
+            typeof res !== "object" ||
+            !res ||
+            !("added" in res) ||
+            typeof res.added !== "number"
+        ) {
+            throw new UnimplementedError();
         }
 
-        throw new UnimplementedError();
+        return {
+            added: res.added,
+        };
+    },
+    async remove(id, options) {
+        const res = await authenticatedFetch({
+            path: `/${prefix}/${id}`,
+            method: "PUT",
+            body: options,
+            contentType: "application/json",
+        });
+
+        if (
+            typeof res !== "object" ||
+            !res ||
+            !("removed" in res) ||
+            typeof res.removed !== "number"
+        ) {
+            throw new UnimplementedError();
+        }
+
+        return {
+            removed: res.removed,
+        };
+    },
+    async listItems(id, skip, limit) {
+        const res = await authenticatedFetch({
+            path: `/${prefix}/${id}`,
+            method: "GET",
+            queryParameters: {
+                skip,
+                limit,
+            },
+        });
+
+        if (!Array.isArray(res)) {
+            throw new UnimplementedError();
+        }
+
+        return res.map(validResourceResponse);
     },
 });
