@@ -1,5 +1,6 @@
 import {
     GroupedResource,
+    Prefix,
     PrefixFromID,
     Reference,
     Resource,
@@ -126,7 +127,7 @@ export const defaultResourceImplementation = <
             return true;
         }
 
-        throw new UnimplementedError();
+        throw new TypeError();
     },
     async update(id, options) {
         const res = await authenticatedFetch({
@@ -149,7 +150,7 @@ export const defaultResourceImplementation = <
         });
 
         if (!Array.isArray(res)) {
-            throw new UnimplementedError();
+            throw new TypeError("Expected an array.");
         }
 
         return res.map(validResponse);
@@ -181,7 +182,7 @@ export const defaultResourceGroupImplementation = <
             !("added" in res) ||
             typeof res.added !== "number"
         ) {
-            throw new UnimplementedError();
+            throw new TypeError();
         }
 
         return {
@@ -202,7 +203,7 @@ export const defaultResourceGroupImplementation = <
             !("removed" in res) ||
             typeof res.removed !== "number"
         ) {
-            throw new UnimplementedError();
+            throw new TypeError();
         }
 
         return {
@@ -220,7 +221,7 @@ export const defaultResourceGroupImplementation = <
         });
 
         if (!Array.isArray(res)) {
-            throw new UnimplementedError();
+            throw new TypeError("Expected an array.");
         }
 
         return res.map(validResourceResponse);
