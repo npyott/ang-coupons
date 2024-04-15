@@ -29,6 +29,16 @@ export type Resource =
     | CouponGroup
     | Session;
 
+export type GroupedResource =
+    | {
+          group: UserGroup;
+          resource: User;
+      }
+    | {
+          group: CouponGroup;
+          resource: Coupon;
+      };
+
 export type Reference<RT extends Resource> = RT["_id"];
 
 export type ResourceMethods<
@@ -47,30 +57,22 @@ export type ResourceMethods<
 };
 
 export type ResourceGroupMethods<
-    T extends
-        | {
-              group: UserGroup;
-              resource: User;
-          }
-        | {
-              group: CouponGroup;
-              resource: Coupon;
-          },
-    ReadKey extends keyof T["resource"] = keyof T["resource"]
+    GroupT extends GroupedResource,
+    ReadKey extends keyof GroupT["resource"] = keyof GroupT["resource"]
 > = {
     add: (
-        id: Reference<T["group"]>,
-        options: { items: Reference<T["resource"]> }
+        id: Reference<GroupT["group"]>,
+        options: { items: Reference<GroupT["resource"]> }
     ) => Promise<{ added: number }>;
     remove: (
-        id: Reference<T["group"]>,
-        options: { items: Reference<T["resource"]> }
+        id: Reference<GroupT["group"]>,
+        options: { items: Reference<GroupT["resource"]> }
     ) => Promise<{ removed: number }>;
     listItems: (
-        id: Reference<T["group"]>,
+        id: Reference<GroupT["group"]>,
         skip: number,
         limit: number
-    ) => Promise<Pick<T["resource"], ReadKey>[]>;
+    ) => Promise<Pick<GroupT["resource"], ReadKey>[]>;
 };
 
 export const UserPrefix = "user";
