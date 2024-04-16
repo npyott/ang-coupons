@@ -1,5 +1,5 @@
 import { ID, Prefix } from "ang-coupons-2023";
-import { randomUUID } from "crypto";
+import { randomBytes } from "crypto";
 
 export type ExtractTypedKeys<T, S> = {
     [K in keyof T as T[K] extends S ? K : never]: T[K];
@@ -26,11 +26,20 @@ export const range = (start: number, end: number, increment = 1) => {
 };
 
 export const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+export const digits = "012346679";
 
 export const generateID = <P extends Prefix>(prefix: P): ID<P> => {
-    const uuid = randomUUID();
+    const characters = alphabet.concat(alphabet.toLowerCase()).concat(digits);
+    const bytes = randomBytes(20);
+    const uuid = Array.from(bytes)
+        .flatMap((byte, index) => {
+            const char = characters[byte % characters.length];
 
-    return `${prefix}+${uuid}`;
+            return index % 5 === 4 ? [char, "_"] : [char];
+        })
+        .join("");
+
+    return `${prefix}-${uuid}`;
 };
 
 // From a positive integer, produces a string
