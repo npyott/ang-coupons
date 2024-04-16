@@ -63,6 +63,15 @@ export const validString = (x: unknown) => {
     throw new TypeError();
 };
 
+export const validURL = (x: string) => {
+    try {
+        new URL(x);
+        return x;
+    } catch (_) {
+        throw new TypeError();
+    }
+};
+
 // TODO - regex validation
 export const validEmail = (x: string) => {
     return x;
@@ -87,8 +96,12 @@ export const validDate = (x: unknown) => {
     }
 
     if (typeof x === "string") {
-        // TODO - validate format
-        return new Date(x);
+        const date = new Date(x);
+        if (!isNaN(date.getTime()) && x === date.toISOString()) {
+            return date;
+        }
+
+        throw TypeError();
     }
 
     throw new TypeError();

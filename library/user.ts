@@ -1,5 +1,7 @@
 import {
     User,
+    UserGroup,
+    UserGroupMethods,
     UserMethods,
     UserReadKey,
     UserUpdateKey,
@@ -15,12 +17,15 @@ import {
     validDate,
     validEmail,
     validID,
+    validNumber,
+    validNumberIntegral,
+    validNumberWithinRange,
     validString,
     validateResource,
 } from "./validation";
 import { compose } from "./util";
 
-const userValidations: Validations<User, UserReadKey> = {
+export const userValidations: Validations<User, UserReadKey> = {
     _id: compose(validString, (x) => validID(x, "user")),
     createdAt: validDate,
     updatedAt: validDate,
@@ -72,5 +77,46 @@ export const createUserModule = (
 
             throw new TypeError();
         },
+    };
+};
+
+export const userGroupValidations: Validations<UserGroup> = {
+    _id: compose(validString, (x) => validID(x, "user_group")),
+    createdAt: validDate,
+    updatedAt: validDate,
+    name: validString,
+    parent: compose(validString, (x) => {
+        try {
+            return validID(x, "user");
+        } catch (_) {
+            return validID(x, "user_group");
+        }
+    }),
+    count: compose(validNumber, validNumberIntegral, (x) =>
+        validNumberWithinRange(x, 0, Number.MAX_SAFE_INTEGER)
+    ),
+};
+
+export const createUserGroupModule = (
+    authenticatedFetch: ReturnType<typeof createAuthenticatedFetch>
+): UserGroupMethods => {
+    const defaultResource = defaultResourceImplementation(
+        "user_group",
+        authenticatedFetch,
+        (res) => validateResource(res, userGroupValidations)
+    );
+    const defaultGroup = defaultResourceGroupImplementation<
+        {
+            resource: User;
+            group: UserGroup;
+        },
+        UserReadKey
+    >("user_group", authenticatedFetch, (res) =>
+        validateResource(res, userValidations)
+    );
+
+    return {
+        ...defaultResource,
+        ...defaultGroup,
     };
 };
