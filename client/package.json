@@ -10,5 +10,8 @@
   "license": "ISC",
   "devDependencies": {
     "@types/ang-coupons-2023": "file:../types"
+  },
+  "dependencies": {
+    "ang-coupons-common": "file:../common"
   }
 }

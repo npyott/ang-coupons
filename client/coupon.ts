@@ -4,12 +4,6 @@ import {
     CouponGroupMethods,
     CouponMethods,
 } from "ang-coupons-2023";
-
-import {
-    defaultResourceImplementation,
-    defaultResourceGroupImplementation,
-    createAuthenticatedFetch,
-} from "./common";
 import {
     Validations,
     validDate,
@@ -20,7 +14,13 @@ import {
     validString,
     validURL,
     validateResource,
-} from "./validation";
+} from "ang-coupons-common/validation";
+
+import {
+    defaultResourceImplementation,
+    defaultResourceGroupImplementation,
+    createAuthenticatedFetch,
+} from "./common";
 import { compose } from "./util";
 
 export const couponValidations: Validations<Coupon> = {
