@@ -6,12 +6,6 @@ import {
     UserReadKey,
     UserUpdateKey,
 } from "ang-coupons-2023";
-
-import {
-    defaultResourceImplementation,
-    defaultResourceGroupImplementation,
-    createAuthenticatedFetch,
-} from "./common";
 import {
     Validations,
     validDate,
@@ -22,7 +16,13 @@ import {
     validNumberWithinRange,
     validString,
     validateResource,
-} from "./validation";
+} from "ang-coupons-common/validation";
+
+import {
+    defaultResourceImplementation,
+    defaultResourceGroupImplementation,
+    createAuthenticatedFetch,
+} from "./common";
 import { compose } from "./util";
 
 export const userValidations: Validations<User, UserReadKey> = {
