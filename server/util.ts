@@ -1,10 +1,6 @@
 import { ID, Prefix } from "ang-coupons-types";
 import { randomBytes } from "crypto";
 
-export type ExtractTypedKeys<T, S> = {
-    [K in keyof T as T[K] extends S ? K : never]: T[K];
-};
-
 export const itMap = function* <T, R>(
     it: Iterable<T>,
     map: (value: T, index: number) => R
