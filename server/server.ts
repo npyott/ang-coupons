@@ -1,6 +1,6 @@
 import { APIRequest, APIResponse } from "./request/models";
 
-import { Prefix } from "ang-coupons-2023";
+import { Prefix } from "ang-coupons-types";
 
 const unimplementedHandler = async () => ({
     statusCode: 404,

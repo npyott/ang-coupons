@@ -1,4 +1,4 @@
-import { ID, Prefix, Resource } from "ang-coupons-2023";
+import { ID, Prefix, Resource } from "ang-coupons-types";
 
 // ID validation
 export const validID = <PrefixT extends Prefix>(x: string, prefix: PrefixT) => {

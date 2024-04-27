@@ -1,4 +1,4 @@
-import { ID, Prefix } from "ang-coupons-2023";
+import { ID, Prefix } from "ang-coupons-types";
 import { randomBytes } from "crypto";
 
 export type ExtractTypedKeys<T, S> = {

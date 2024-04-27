@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { User } from "ang-coupons-2023";
+import { User } from "ang-coupons-types";
 
 export type AuthContextType = {
     user?: Pick<User, "name" | "email">;

@@ -3,7 +3,7 @@ import {
     CouponGroup,
     CouponGroupMethods,
     CouponMethods,
-} from "ang-coupons-2023";
+} from "ang-coupons-types";
 import {
     Validations,
     validDate,
@@ -15,13 +15,13 @@ import {
     validURL,
     validateResource,
 } from "ang-coupons-common/validation";
+import { compose } from "ang-coupons-common/functional-util";
 
 import {
     defaultResourceImplementation,
     defaultResourceGroupImplementation,
     createAuthenticatedFetch,
 } from "./common";
-import { compose } from "./util";
 
 export const couponValidations: Validations<Coupon> = {
     _id: compose(validString, (x) => validID(x, "coupon")),

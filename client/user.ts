@@ -5,7 +5,7 @@ import {
     UserMethods,
     UserReadKey,
     UserUpdateKey,
-} from "ang-coupons-2023";
+} from "ang-coupons-types";
 import {
     Validations,
     validDate,
@@ -17,13 +17,13 @@ import {
     validString,
     validateResource,
 } from "ang-coupons-common/validation";
+import { compose } from "ang-coupons-common/functional-util";
 
 import {
     defaultResourceImplementation,
     defaultResourceGroupImplementation,
     createAuthenticatedFetch,
 } from "./common";
-import { compose } from "./util";
 
 export const userValidations: Validations<User, UserReadKey> = {
     _id: compose(validString, (x) => validID(x, "user")),

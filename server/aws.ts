@@ -1,5 +1,5 @@
 import DynamoDB, { AttributeValue } from "aws-sdk/clients/dynamodb";
-import { Reference, Resource } from "ang-coupons-2023";
+import { Reference, Resource } from "ang-coupons-types";
 
 import {
     AWS_ACCESS_KEY_ID,

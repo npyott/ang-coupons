@@ -1,12 +1,11 @@
 import {
     GroupedResource,
-    Prefix,
     PrefixFromID,
     Reference,
     Resource,
     ResourceGroupMethods,
     ResourceMethods,
-} from "ang-coupons-2023";
+} from "ang-coupons-types";
 
 export class UnimplementedError extends Error {
     constructor() {
