@@ -1,12 +1,14 @@
 import DynamoDB, { AttributeValue } from "aws-sdk/clients/dynamodb";
+
 import { Reference, Resource } from "ang-coupons-types";
+import { ExtractTypedKeys } from "ang-coupons-types/utils";
 
 import {
     AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY,
     AWS_DYNAMODB_TABLE_NAME,
 } from "./config";
-import { ExtractTypedKeys, alphabetNumber, itMap } from "./util";
+import { alphabetNumber, itMap } from "./util";
 
 export class ObjectTypeUnimplementedError extends Error {
     constructor(obj: any) {
