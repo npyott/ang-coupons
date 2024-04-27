@@ -1,5 +1,5 @@
 {
-    "name": "ang-coupons-2023-server",
+    "name": "ang-coupons-server",
     "version": "1.0.0",
     "description": "",
     "main": "server.js",
@@ -13,7 +13,7 @@
         "aws-sdk": "^2.1531.0"
     },
     "devDependencies": {
-        "@types/ang-coupons-2023": "file:../types",
+        "@types/ang-coupons-types": "file:../types",
         "@types/node": "^20.12.7"
     }
 }

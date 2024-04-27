@@ -45,6 +45,6 @@
         ]
     },
     "devDependencies": {
-        "@types/ang-coupons-2023": "file:../types"
+        "@types/ang-coupons-types": "file:../types"
     }
 }
