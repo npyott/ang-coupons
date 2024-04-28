@@ -1,8 +1,8 @@
 import { ID, Prefix } from "ang-coupons-types";
 import { randomBytes } from "crypto";
 
-export const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-export const digits = "012346679";
+const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const digits = "012346679";
 
 export const generateID = <P extends Prefix>(prefix: P): ID<P> => {
     const characters = alphabet.concat(alphabet.toLowerCase()).concat(digits);
