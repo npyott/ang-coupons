@@ -15,7 +15,7 @@ import {
     validURL,
     validateResource,
 } from "ang-coupons-common/validation";
-import { compose } from "ang-coupons-common/functional-util";
+import { compose } from "ang-coupons-common/functional-utils";
 
 import {
     defaultResourceImplementation,
