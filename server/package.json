@@ -14,6 +14,7 @@
     },
     "devDependencies": {
         "@types/ang-coupons-types": "file:../types",
-        "@types/node": "^20.12.7"
+        "@types/node": "^20.12.7",
+        "ang-coupons-common": "file:../common"
     }
 }

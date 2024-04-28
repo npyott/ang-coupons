@@ -1,26 +1,6 @@
 import { ID, Prefix } from "ang-coupons-types";
 import { randomBytes } from "crypto";
 
-export const itMap = function* <T, R>(
-    it: Iterable<T>,
-    map: (value: T, index: number) => R
-) {
-    let index = 0;
-    for (const x of it) {
-        yield map(x, index);
-        ++index;
-    }
-};
-
-export const range = (start: number, end: number, increment = 1) => {
-    const array = new Array<number>();
-    for (let i = start; i < end; i += increment) {
-        array.push(i);
-    }
-
-    return array;
-};
-
 export const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 export const digits = "012346679";
 
