@@ -8,6 +8,7 @@ import {
 } from "ang-coupons-types";
 import {
     Validations,
+    oneOfValidID,
     validDate,
     validEmail,
     validID,
@@ -85,13 +86,9 @@ export const userGroupValidations: Validations<UserGroup> = {
     createdAt: validDate,
     updatedAt: validDate,
     name: validString,
-    parent: compose(validString, (x) => {
-        try {
-            return validID(x, "user");
-        } catch (_) {
-            return validID(x, "user_group");
-        }
-    }),
+    parent: compose(validString, (x) =>
+        oneOfValidID(x, ["user", "user_group"])
+    ),
     count: compose(validNumber, validNumberIntegral, (x) =>
         validNumberWithinRange(x, 0, Number.MAX_SAFE_INTEGER)
     ),
