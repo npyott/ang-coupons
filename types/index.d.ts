@@ -1,3 +1,14 @@
+import {
+    Coupon,
+    CouponGroup,
+    CouponGroupPrefix,
+    CouponPrefix,
+    CouponRequest,
+    CouponRequestPrefix,
+} from "./coupons";
+import { Session, SessionPrefix } from "./sessions";
+import { User, UserGroup, UserGroupPrefix, UserPrefix } from "./users";
+
 export type ID<PrefixT extends Prefix> = `${PrefixT}-${string}`;
 export type PrefixFromID<ID extends Reference<Resource>> =
     ID extends `${infer PT}-${string}` ? PT : never;
@@ -75,50 +86,6 @@ export type ResourceGroupMethods<
     ) => Promise<Pick<GroupT["resource"], ReadKey>[]>;
 };
 
-export const UserPrefix = "user";
-export type User = CommonBasedResource<
-    typeof UserPrefix,
-    {
-        name: string;
-        email: string;
-        password: {
-            hash: string;
-            updatedAt: Date;
-        };
-        groups: Set<Reference<UserGroup>>;
-    }
->;
-
-export type UserReadKey = keyof Pick<
-    User,
-    "_id" | "createdAt" | "updatedAt" | "name" | "email"
->;
-export type UserUpdateKey = keyof Pick<User, "name" | "email">;
-export type UserMethods = Omit<
-    ResourceMethods<User, UserUpdateKey, UserReadKey>,
-    "list"
-> & {
-    sendPasswordToken: (options: Pick<User, "email">) => Promise<boolean>;
-    updatePassword: (options: {
-        newPassword: string;
-        token: string;
-    }) => Promise<boolean>;
-};
-
-export const UserGroupPrefix = "user_group";
-export type UserGroup = CommonBasedResource<
-    typeof UserGroupPrefix,
-    {
-        name: string;
-        parent: Reference<UserGroup> | Reference<User>;
-        count: number;
-    }
->;
-
-export type UserGroupUpdateKey = keyof Pick<UserGroup, "name" | "parent">;
-export type UserGroupMethods = ResourceMethods<UserGroup, UserGroupUpdateKey> &
-    ResourceGroupMethods<{ group: UserGroup; resource: User }, UserReadKey>;
-
 type CommonPermissionEffect = "none" | "read" | "add" | "delete";
 type ProcessPermissionEffect = "start" | "complete" | "cancel";
 type ResourcePermissionEffect =
@@ -151,78 +118,4 @@ export type PermissionMethods = Pick<
     "create" | "delete"
 > & {
     listPermissions: (options: Reference<Resource>) => Permission[];
-};
-
-export const CouponPrefix = "coupon";
-export type Coupon = CommonBasedResource<
-    typeof CouponPrefix,
-    {
-        description: string;
-        limit: number;
-        usage: number;
-        requestValidDuration: number;
-        imageSrc: string;
-        group: Reference<CouponGroup>;
-    }
->;
-
-export type CouponMethods = ResourceMethods<
-    Coupon,
-    "description" | "limit" | "requestValidDuration" | "imageSrc" | "group"
->;
-
-export const CouponRequestPrefix = "coupon_request";
-export type CouponRequest = CommonBasedResource<
-    typeof CouponRequestPrefix,
-    {
-        coupon: Reference<Coupon>;
-        status: "pending" | "completed" | "failed" | "cancelled";
-        requesterNote: string;
-        responderNote: string;
-        requester: Reference<User>;
-        responders: (Reference<UserGroup> | Reference<User>)[];
-    }
->;
-
-export type CouponRequestMethod = Omit<
-    ResourceMethods<CouponRequest, "coupon" | "requesterNote" | "responders">,
-    "delete" | "update"
->;
-
-export const CouponGroupPrefix = "coupon_group";
-export type CouponGroup = CommonBasedResource<
-    typeof CouponGroupPrefix,
-    {
-        description: string;
-        parent: Reference<CouponGroup> | null;
-        count: number;
-    }
->;
-
-export type CouponGroupMethods = ResourceMethods<
-    CouponGroup,
-    "description" | "parent"
-> &
-    ResourceGroupMethods<{ group: CouponGroup; resource: Coupon }>;
-
-export const SessionPrefix = "session";
-export type Session = CommonBasedResource<
-    typeof SessionPrefix,
-    {
-        user: Reference<User>;
-        expiration: Date;
-        ip: string;
-        logout: boolean;
-        previous?: Reference<Session>;
-        next?: Reference<Session>;
-    }
->;
-
-export type SessionMethods = {
-    login: (options: {
-        email: string;
-        password: string;
-    }) => Pick<User, UserReadKey>;
-    logout: () => void;
-    refresh: () => Pick<User, UserReadKey>;
 };

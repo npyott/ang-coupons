@@ -1,4 +1,5 @@
-import { Coupon, Reference } from "ang-coupons-types";
+import { Reference } from "ang-coupons-types";
+import { Coupon } from "ang-coupons-types/coupons";
 
 import { generateID } from "../util";
 import { putItem, updateItem } from "../aws";

@@ -5,7 +5,7 @@ import {
     UserMethods,
     UserReadKey,
     UserUpdateKey,
-} from "ang-coupons-types";
+} from "ang-coupons-types/users";
 import {
     Validations,
     oneOfValidID,

@@ -1,9 +1,8 @@
 import { createContext } from "react";
-import { User } from "ang-coupons-types";
+import { User, UserReadKey } from "ang-coupons-types/users";
 
 export type AuthContextType = {
-    user?: Pick<User, "name" | "email">;
-    token?: string;
+    user?: Pick<User, UserReadKey>;
 };
 
 export const AuthContext = createContext<AuthContextType>({});
