@@ -1,4 +1,5 @@
 import {
+    CommonBasedPermission,
     CommonBasedResource,
     Reference,
     ResourceGroupMethods,
@@ -24,6 +25,11 @@ export type CouponMethods = ResourceMethods<
     "description" | "limit" | "requestValidDuration" | "imageSrc" | "group"
 >;
 
+export type CouponPermission = CommonBasedPermission<
+    Coupon,
+    keyof CouponMethods
+>;
+
 export const CouponRequestPrefix = "coupon_request";
 export type CouponRequest = CommonBasedResource<
     typeof CouponRequestPrefix,
@@ -40,6 +46,13 @@ export type CouponRequest = CommonBasedResource<
 export type CouponRequestMethod = Omit<
     ResourceMethods<CouponRequest, "coupon" | "requesterNote" | "responders">,
     "delete" | "update"
+> & {
+    fulfill: () => Promise<boolean>;
+};
+
+export type CouponRequestPermission = CommonBasedPermission<
+    CouponRequest,
+    keyof CouponRequestMethod
 >;
 
 export const CouponGroupPrefix = "coupon_group";
@@ -57,3 +70,8 @@ export type CouponGroupMethods = ResourceMethods<
     "description" | "parent"
 > &
     ResourceGroupMethods<{ group: CouponGroup; resource: Coupon }>;
+
+export type CouponGroupPermission = CommonBasedPermission<
+    CouponGroup,
+    keyof CouponGroupMethods
+>;

@@ -1,4 +1,5 @@
 import {
+    CommonBasedPermission,
     CommonBasedResource,
     Reference,
     ResourceGroupMethods,
@@ -23,9 +24,9 @@ export type UserReadKey = keyof Pick<
     User,
     "_id" | "createdAt" | "updatedAt" | "name" | "email"
 >;
-export type UserUpdateKey = keyof Pick<User, "name" | "email">;
+export type UserCreateKey = keyof Pick<User, "name" | "email">;
 export type UserMethods = Omit<
-    ResourceMethods<User, UserUpdateKey, UserReadKey>,
+    ResourceMethods<User, UserCreateKey, UserReadKey>,
     "list"
 > & {
     sendPasswordToken: (options: Pick<User, "email">) => Promise<boolean>;
@@ -34,6 +35,8 @@ export type UserMethods = Omit<
         token: string;
     }) => Promise<boolean>;
 };
+
+export type UserPermission = CommonBasedPermission<User, keyof UserMethods>;
 
 export const UserGroupPrefix = "user_group";
 export type UserGroup = CommonBasedResource<
@@ -45,6 +48,11 @@ export type UserGroup = CommonBasedResource<
     }
 >;
 
-export type UserGroupUpdateKey = keyof Pick<UserGroup, "name" | "parent">;
-export type UserGroupMethods = ResourceMethods<UserGroup, UserGroupUpdateKey> &
+export type UserGroupCreateKey = keyof Pick<UserGroup, "name" | "parent">;
+export type UserGroupMethods = ResourceMethods<UserGroup, UserGroupCreateKey> &
     ResourceGroupMethods<{ group: UserGroup; resource: User }, UserReadKey>;
+
+export type UserGroupPermission = CommonBasedPermission<
+    UserGroup,
+    keyof UserGroupMethods
+>;

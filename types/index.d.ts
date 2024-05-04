@@ -1,13 +1,23 @@
 import {
     Coupon,
     CouponGroup,
+    CouponGroupPermission,
     CouponGroupPrefix,
+    CouponPermission,
     CouponPrefix,
     CouponRequest,
+    CouponRequestPermission,
     CouponRequestPrefix,
 } from "./coupons";
 import { Session, SessionPrefix } from "./sessions";
-import { User, UserGroup, UserGroupPrefix, UserPrefix } from "./users";
+import {
+    User,
+    UserGroup,
+    UserGroupPermission,
+    UserGroupPrefix,
+    UserPermission,
+    UserPrefix,
+} from "./users";
 
 export type ID<PrefixT extends Prefix> = `${PrefixT}-${string}`;
 export type PrefixFromID<ID extends Reference<Resource>> =
@@ -34,7 +44,7 @@ export type Prefix =
 export type Resource =
     | User
     | UserGroup
-    | Permission
+    | ResourcePermission
     | Coupon
     | CouponRequest
     | CouponGroup
@@ -54,10 +64,11 @@ export type Reference<RT extends Resource> = RT["_id"];
 
 export type ResourceMethods<
     RT extends Resource,
-    UpdateKey extends keyof RT = keyof RT,
-    ReadKey extends keyof RT = keyof RT
+    CreateKey extends keyof RT = keyof RT,
+    ReadKey extends keyof RT = keyof RT,
+    UpdateKey extends keyof RT = CreateKey
 > = {
-    create: (options: Pick<RT, UpdateKey>) => Promise<Pick<RT, ReadKey>>;
+    create: (options: Pick<RT, CreateKey>) => Promise<Pick<RT, ReadKey>>;
     get: (id: Reference<RT>) => Promise<Pick<RT, ReadKey>>;
     delete: (id: Reference<RT>) => Promise<boolean>;
     update: (
@@ -86,36 +97,44 @@ export type ResourceGroupMethods<
     ) => Promise<Pick<GroupT["resource"], ReadKey>[]>;
 };
 
-type CommonPermissionEffect = "none" | "read" | "add" | "delete";
-type ProcessPermissionEffect = "start" | "complete" | "cancel";
-type ResourcePermissionEffect =
-    | CommonPermissionEffect
-    | ProcessPermissionEffect;
-
-type MetaPermissionEffectBase =
-    `${CommonPermissionEffect}-${CommonPermissionEffect}`;
-type MetaPermissionEffectAgent = `agent-${MetaPermissionEffectBase}`;
-type MetaPermissionEffectTarget = `target-${MetaPermissionEffectBase}`;
-type MetaPermissionEffect =
-    | MetaPermissionEffectAgent
-    | MetaPermissionEffectTarget;
-
-export type PermissionEffect = ResourcePermissionEffect | MetaPermissionEffect;
-
 export const PermissionPrefix = "perm";
-export type Permission = CommonBasedResource<
+type Agent = User | UserGroup;
+export type CommonBasedPermission<
+    Target extends Resource,
+    TargetMethodKey extends string
+> = CommonBasedResource<
     typeof PermissionPrefix,
     {
-        agents: (Reference<User> | Reference<UserGroup>)[];
-        target: Reference<Resource>;
-        effect: PermissionEffect;
+        agent: Reference<Agent>;
+        target: Reference<Target>;
+        method: TargetMethodKey;
+        effect: "allow" | "deny";
         priority?: number;
+        grantee: Reference<Agent>;
+        shareable: boolean;
     }
 >;
 
-export type PermissionMethods = Pick<
-    ResourceMethods<Permission, "agents" | "effect" | "target" | "priority">,
-    "create" | "delete"
-> & {
-    listPermissions: (options: Reference<Resource>) => Permission[];
+export type ResourcePermission =
+    | UserPermission
+    | UserGroupPermission
+    | CouponPermission
+    | CouponRequestPermission
+    | CouponGroupPermission;
+
+export type PermissionMethods = {
+    listPermissionsOnTarget: (
+        options: Reference<Resource>
+    ) => ResourcePermission[];
+    listPermissionsOnAgent: (options: Reference<Agent>) => ResourcePermission[];
+    sharePermission: (options: {
+        permission: Reference<ResourcePermission>;
+        agent: Reference<Agent>;
+        shareable: boolean;
+    }) => Promise<ResourcePermission>;
+    rescindPermission: (options: {
+        permission: Reference<ResourcePermission>;
+        agent: Reference<Agent>;
+        descend: boolean;
+    }) => Promise<boolean>;
 };
