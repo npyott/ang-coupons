@@ -1,9 +1,11 @@
 import {
     Coupon,
+    CouponCreateKey,
     CouponGroup,
+    CouponGroupCreateKey,
     CouponGroupMethods,
     CouponMethods,
-} from "ang-coupons-types";
+} from "ang-coupons-types/coupons";
 import {
     Validations,
     validDate,
@@ -42,10 +44,11 @@ export const couponValidations: Validations<Coupon> = {
 export const createCouponModule = (
     authenticatedFetch: ReturnType<typeof createAuthenticatedFetch>
 ): CouponMethods => {
-    const defaultMethods = defaultResourceImplementation<Coupon>(
-        "coupon",
-        authenticatedFetch,
-        (res) => validateResource(res, couponValidations)
+    const defaultMethods = defaultResourceImplementation<
+        Coupon,
+        CouponCreateKey
+    >("coupon", authenticatedFetch, (res) =>
+        validateResource(res, couponValidations)
     );
 
     return defaultMethods;
@@ -71,10 +74,11 @@ export const couponGroupValidations: Validations<CouponGroup> = {
 export const createCouponGroupModule = (
     authenticatedFetch: ReturnType<typeof createAuthenticatedFetch>
 ): CouponGroupMethods => {
-    const defaultResource = defaultResourceImplementation(
-        "coupon_group",
-        authenticatedFetch,
-        (res) => validateResource(res, couponGroupValidations)
+    const defaultResource = defaultResourceImplementation<
+        CouponGroup,
+        CouponGroupCreateKey
+    >("coupon_group", authenticatedFetch, (res) =>
+        validateResource(res, couponGroupValidations)
     );
     const defaultGroup = defaultResourceGroupImplementation<{
         resource: Coupon;

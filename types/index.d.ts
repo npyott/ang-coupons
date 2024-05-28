@@ -29,7 +29,7 @@ type CommonResource<PrefixT extends Prefix> = {
     updatedAt: Date;
 };
 
-type CommonBasedResource<PrefixT extends Prefix, T> = T &
+export type CommonBasedResource<PrefixT extends Prefix, T> = T &
     CommonResource<PrefixT>;
 
 export type Prefix =
@@ -110,7 +110,7 @@ export type CommonBasedPermission<
         method: TargetMethodKey;
         effect: "allow" | "deny";
         priority?: number;
-        grantee: Reference<Agent>;
+        grantees: Reference<Agent>[];
         shareable: boolean;
     }
 >;

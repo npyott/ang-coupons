@@ -4,7 +4,8 @@ import {
     UserGroupMethods,
     UserMethods,
     UserReadKey,
-    UserUpdateKey,
+    UserCreateKey,
+    UserGroupCreateKey,
 } from "ang-coupons-types/users";
 import {
     Validations,
@@ -39,10 +40,10 @@ export const createUserModule = (
 ): UserMethods => {
     const defaultMethods = defaultResourceImplementation<
         User,
-        UserUpdateKey,
+        UserCreateKey,
         UserReadKey
     >("user", authenticatedFetch, (res) =>
-        validateResource(res, userValidations)
+        validateResource<User, UserReadKey>(res, userValidations)
     );
 
     return {
@@ -97,10 +98,11 @@ export const userGroupValidations: Validations<UserGroup> = {
 export const createUserGroupModule = (
     authenticatedFetch: ReturnType<typeof createAuthenticatedFetch>
 ): UserGroupMethods => {
-    const defaultResource = defaultResourceImplementation(
-        "user_group",
-        authenticatedFetch,
-        (res) => validateResource(res, userGroupValidations)
+    const defaultResource = defaultResourceImplementation<
+        UserGroup,
+        UserGroupCreateKey
+    >("user_group", authenticatedFetch, (res) =>
+        validateResource(res, userGroupValidations)
     );
     const defaultGroup = defaultResourceGroupImplementation<
         {
@@ -109,7 +111,7 @@ export const createUserGroupModule = (
         },
         UserReadKey
     >("user_group", authenticatedFetch, (res) =>
-        validateResource(res, userValidations)
+        validateResource<User, UserReadKey>(res, userValidations)
     );
 
     return {

@@ -20,10 +20,14 @@ export type Coupon = CommonBasedResource<
     }
 >;
 
-export type CouponMethods = ResourceMethods<
-    Coupon,
-    "description" | "limit" | "requestValidDuration" | "imageSrc" | "group"
->;
+export type CouponCreateKey =
+    | "description"
+    | "limit"
+    | "requestValidDuration"
+    | "imageSrc"
+    | "group";
+
+export type CouponMethods = ResourceMethods<Coupon, CouponCreateKey>;
 
 export type CouponPermission = CommonBasedPermission<
     Coupon,
@@ -43,8 +47,9 @@ export type CouponRequest = CommonBasedResource<
     }
 >;
 
+export type CouponRequestCreateKey = "coupon" | "requesterNote" | "responders";
 export type CouponRequestMethod = Omit<
-    ResourceMethods<CouponRequest, "coupon" | "requesterNote" | "responders">,
+    ResourceMethods<CouponRequest, CouponRequestCreateKey>,
     "delete" | "update"
 > & {
     fulfill: () => Promise<boolean>;
@@ -65,9 +70,10 @@ export type CouponGroup = CommonBasedResource<
     }
 >;
 
+export type CouponGroupCreateKey = "description" | "parent";
 export type CouponGroupMethods = ResourceMethods<
     CouponGroup,
-    "description" | "parent"
+    CouponGroupCreateKey
 > &
     ResourceGroupMethods<{ group: CouponGroup; resource: Coupon }>;
 

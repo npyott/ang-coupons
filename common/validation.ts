@@ -22,6 +22,17 @@ export const oneOfValidID = <PrefixesT extends readonly Prefix[]>(
     throw new TypeError();
 };
 
+export const someValidID = (x: string) =>
+    oneOfValidID(x, [
+        "coupon",
+        "coupon_group",
+        "coupon_request",
+        "perm",
+        "session",
+        "user",
+        "user_group",
+    ]);
+
 // Numerical validation
 export const validNumber = (x: unknown) => {
     if (typeof x !== "number" || isNaN(x)) {
@@ -134,9 +145,9 @@ export const validEvery = <T, ValidT>(x: T[], validation: (x: T) => ValidT) =>
 export type Validations<
     RT extends Resource,
     ExpectedKey extends keyof RT = keyof RT
-> = {
+> = Required<{
     [K in ExpectedKey]: (x: unknown) => RT[K];
-};
+}>;
 
 export const validateResource = <
     RT extends Resource,
@@ -154,7 +165,7 @@ export const validateResource = <
             validations
         ).map(([key, validation]) => {
             if (key in res) {
-                return [key, validation(res[key])];
+                return [key, validation(res[key as keyof typeof res])];
             }
 
             throw new TypeError();
