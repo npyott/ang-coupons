@@ -94,9 +94,8 @@ export const defaultResourceImplementation = <
     ReadKey extends keyof RT = keyof RT
 >(
     prefix: PrefixFromID<Reference<RT>>,
-    authenticatedFetch: ReturnType<typeof createAuthenticatedFetch>,
-    validResponse: (res: unknown) => Pick<RT, ReadKey> = (res) =>
-        res as Pick<RT, ReadKey>
+    validResponse: (res: unknown) => Pick<RT, ReadKey>,
+    authenticatedFetch: ReturnType<typeof createAuthenticatedFetch>
 ): ResourceMethods<RT, UpdateKey, ReadKey> => ({
     async create(options) {
         const res = await authenticatedFetch({
@@ -161,11 +160,8 @@ export const defaultResourceGroupImplementation = <
     ReadKey extends keyof GroupT["resource"] = keyof GroupT["resource"]
 >(
     prefix: PrefixFromID<Reference<GroupT["group"]>>,
-    authenticatedFetch: ReturnType<typeof createAuthenticatedFetch>,
-    validResourceResponse: (
-        res: unknown
-    ) => Pick<GroupT["resource"], ReadKey> = (res) =>
-        res as Pick<GroupT["resource"], ReadKey>
+    validResourceResponse: (res: unknown) => Pick<GroupT["resource"], ReadKey>,
+    authenticatedFetch: ReturnType<typeof createAuthenticatedFetch>
 ): ResourceGroupMethods<GroupT, ReadKey> => ({
     async add(id, options) {
         const res = await authenticatedFetch({

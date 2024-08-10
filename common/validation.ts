@@ -33,6 +33,15 @@ export const someValidID = (x: string) =>
         "user_group",
     ]);
 
+// Boolean validation
+export const validBoolean = (x: unknown) => {
+    if (typeof x !== "boolean") {
+        throw new TypeError();
+    }
+
+    return x;
+};
+
 // Numerical validation
 export const validNumber = (x: unknown) => {
     if (typeof x !== "number" || isNaN(x)) {
@@ -143,25 +152,25 @@ export const validEvery = <T, ValidT>(x: T[], validation: (x: T) => ValidT) =>
     x.map(validation);
 
 export type Validations<
-    RT extends Resource,
-    ExpectedKey extends keyof RT = keyof RT
+    T extends Record<string, any>,
+    ExpectedKey extends keyof T = keyof T
 > = Required<{
-    [K in ExpectedKey]: (x: unknown) => RT[K];
+    [K in ExpectedKey]: (x: unknown) => T[K];
 }>;
 
-export const validateResource = <
-    RT extends Resource,
-    ExpectedKey extends keyof RT = keyof RT
+export const validateObject = <
+    T extends Record<string, any>,
+    ExpectedKey extends keyof T = keyof T
 >(
     res: unknown,
-    validations: Validations<RT, ExpectedKey>
-): Pick<RT, ExpectedKey> => {
+    validations: Validations<T, ExpectedKey>
+): Pick<T, ExpectedKey> => {
     if (typeof res !== "object" || !res) {
         throw new TypeError();
     }
 
     return Object.fromEntries(
-        Object.entries<Validations<RT, ExpectedKey>[ExpectedKey]>(
+        Object.entries<Validations<T, ExpectedKey>[ExpectedKey]>(
             validations
         ).map(([key, validation]) => {
             if (key in res) {
@@ -170,5 +179,5 @@ export const validateResource = <
 
             throw new TypeError();
         })
-    ) as Pick<RT, ExpectedKey>;
+    ) as Pick<T, ExpectedKey>;
 };

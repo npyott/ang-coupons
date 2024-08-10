@@ -15,7 +15,7 @@ import {
     validNumberWithinRange,
     validString,
     validURL,
-    validateResource,
+    validateObject,
 } from "ang-coupons-common/validation";
 import { compose } from "ang-coupons-common/functional-utils";
 
@@ -47,8 +47,10 @@ export const createCouponModule = (
     const defaultMethods = defaultResourceImplementation<
         Coupon,
         CouponCreateKey
-    >("coupon", authenticatedFetch, (res) =>
-        validateResource(res, couponValidations)
+    >(
+        "coupon",
+        (res) => validateObject(res, couponValidations),
+        authenticatedFetch
     );
 
     return defaultMethods;
@@ -77,14 +79,18 @@ export const createCouponGroupModule = (
     const defaultResource = defaultResourceImplementation<
         CouponGroup,
         CouponGroupCreateKey
-    >("coupon_group", authenticatedFetch, (res) =>
-        validateResource(res, couponGroupValidations)
+    >(
+        "coupon_group",
+        (res) => validateObject(res, couponGroupValidations),
+        authenticatedFetch
     );
     const defaultGroup = defaultResourceGroupImplementation<{
         resource: Coupon;
         group: CouponGroup;
-    }>("coupon_group", authenticatedFetch, (res) =>
-        validateResource(res, couponValidations)
+    }>(
+        "coupon_group",
+        (res) => validateObject(res, couponValidations),
+        authenticatedFetch
     );
 
     return {

@@ -108,10 +108,6 @@ export type CommonBasedPermission<
         agent: Reference<Agent>;
         target: Reference<Target>;
         method: TargetMethodKey;
-        effect: "allow" | "deny";
-        priority?: number;
-        grantees: Reference<Agent>[];
-        shareable: boolean;
     }
 >;
 
@@ -121,20 +117,3 @@ export type ResourcePermission =
     | CouponPermission
     | CouponRequestPermission
     | CouponGroupPermission;
-
-export type PermissionMethods = {
-    listPermissionsOnTarget: (
-        options: Reference<Resource>
-    ) => ResourcePermission[];
-    listPermissionsOnAgent: (options: Reference<Agent>) => ResourcePermission[];
-    sharePermission: (options: {
-        permission: Reference<ResourcePermission>;
-        agent: Reference<Agent>;
-        shareable: boolean;
-    }) => Promise<ResourcePermission>;
-    rescindPermission: (options: {
-        permission: Reference<ResourcePermission>;
-        agent: Reference<Agent>;
-        descend: boolean;
-    }) => Promise<boolean>;
-};

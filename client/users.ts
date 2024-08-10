@@ -17,7 +17,7 @@ import {
     validNumberIntegral,
     validNumberWithinRange,
     validString,
-    validateResource,
+    validateObject,
 } from "ang-coupons-common/validation";
 import { compose } from "ang-coupons-common/functional-utils";
 
@@ -42,8 +42,10 @@ export const createUserModule = (
         User,
         UserCreateKey,
         UserReadKey
-    >("user", authenticatedFetch, (res) =>
-        validateResource<User, UserReadKey>(res, userValidations)
+    >(
+        "user",
+        (res) => validateObject<User, UserReadKey>(res, userValidations),
+        authenticatedFetch
     );
 
     return {
@@ -101,8 +103,10 @@ export const createUserGroupModule = (
     const defaultResource = defaultResourceImplementation<
         UserGroup,
         UserGroupCreateKey
-    >("user_group", authenticatedFetch, (res) =>
-        validateResource(res, userGroupValidations)
+    >(
+        "user_group",
+        (res) => validateObject(res, userGroupValidations),
+        authenticatedFetch
     );
     const defaultGroup = defaultResourceGroupImplementation<
         {
@@ -110,8 +114,10 @@ export const createUserGroupModule = (
             group: UserGroup;
         },
         UserReadKey
-    >("user_group", authenticatedFetch, (res) =>
-        validateResource<User, UserReadKey>(res, userValidations)
+    >(
+        "user_group",
+        (res) => validateObject<User, UserReadKey>(res, userValidations),
+        authenticatedFetch
     );
 
     return {
