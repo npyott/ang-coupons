@@ -1,10 +1,5 @@
-import {
-    CommonBasedPermission,
-    CommonBasedResource,
-    Reference,
-    ResourceGroupMethods,
-    ResourceMethods,
-} from ".";
+import { CommonBasedResource, Reference, ResourceMethods } from ".";
+import { Vendor } from "./vendors";
 
 export const UserPrefix = "user";
 export type User = CommonBasedResource<
@@ -16,17 +11,18 @@ export type User = CommonBasedResource<
             hash: string;
             updatedAt: Date;
         };
-        groups: Set<Reference<UserGroup>>;
+        vendors: Set<Reference<Vendor>>;
     }
 >;
 
+export type UserCreateKey = keyof Pick<User, "name" | "email">;
 export type UserReadKey = keyof Pick<
     User,
     "_id" | "createdAt" | "updatedAt" | "name" | "email"
 >;
-export type UserCreateKey = keyof Pick<User, "name" | "email">;
+export type UserUpdateKey = UserCreateKey;
 export type UserMethods = Omit<
-    ResourceMethods<User, UserCreateKey, UserReadKey>,
+    ResourceMethods<User, UserCreateKey, UserReadKey, UserUpdateKey>,
     "list"
 > & {
     sendPasswordToken: (options: Pick<User, "email">) => Promise<boolean>;
@@ -35,24 +31,3 @@ export type UserMethods = Omit<
         token: string;
     }) => Promise<boolean>;
 };
-
-export type UserPermission = CommonBasedPermission<User, keyof UserMethods>;
-
-export const UserGroupPrefix = "user_group";
-export type UserGroup = CommonBasedResource<
-    typeof UserGroupPrefix,
-    {
-        name: string;
-        parent: Reference<UserGroup> | Reference<User>;
-        count: number;
-    }
->;
-
-export type UserGroupCreateKey = keyof Pick<UserGroup, "name" | "parent">;
-export type UserGroupMethods = ResourceMethods<UserGroup, UserGroupCreateKey> &
-    ResourceGroupMethods<{ group: UserGroup; resource: User }, UserReadKey>;
-
-export type UserGroupPermission = CommonBasedPermission<
-    UserGroup,
-    keyof UserGroupMethods
->;

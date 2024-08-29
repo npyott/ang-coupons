@@ -18,6 +18,7 @@ import {
     UserPermission,
     UserPrefix,
 } from "./users";
+import { Vendor, VendorPrefix } from "./vendors";
 
 export type ID<PrefixT extends Prefix> = `${PrefixT}-${string}`;
 export type PrefixFromID<ID extends Reference<Resource>> =
@@ -34,39 +35,20 @@ export type CommonBasedResource<PrefixT extends Prefix, T> = T &
 
 export type Prefix =
     | typeof UserPrefix
-    | typeof UserGroupPrefix
-    | typeof PermissionPrefix
     | typeof CouponPrefix
     | typeof CouponRequestPrefix
-    | typeof CouponGroupPrefix
+    | typeof VendorPrefix
     | typeof SessionPrefix;
 
-export type Resource =
-    | User
-    | UserGroup
-    | ResourcePermission
-    | Coupon
-    | CouponRequest
-    | CouponGroup
-    | Session;
-
-export type GroupedResource =
-    | {
-          group: UserGroup;
-          resource: User;
-      }
-    | {
-          group: CouponGroup;
-          resource: Coupon;
-      };
+export type Resource = User | Coupon | CouponRequest | Vendor | Session;
 
 export type Reference<RT extends Resource> = RT["_id"];
 
 export type ResourceMethods<
     RT extends Resource,
-    CreateKey extends keyof RT = keyof RT,
-    ReadKey extends keyof RT = keyof RT,
-    UpdateKey extends keyof RT = CreateKey
+    CreateKey extends keyof RT,
+    ReadKey extends keyof RT,
+    UpdateKey extends keyof RT
 > = {
     create: (options: Pick<RT, CreateKey>) => Promise<Pick<RT, ReadKey>>;
     get: (id: Reference<RT>) => Promise<Pick<RT, ReadKey>>;
@@ -77,43 +59,3 @@ export type ResourceMethods<
     ) => Promise<Pick<RT, ReadKey>>;
     list: (skip: number, limit: number) => Promise<Pick<RT, ReadKey>[]>;
 };
-
-export type ResourceGroupMethods<
-    GroupT extends GroupedResource,
-    ReadKey extends keyof GroupT["resource"] = keyof GroupT["resource"]
-> = {
-    add: (
-        id: Reference<GroupT["group"]>,
-        options: { items: Reference<GroupT["resource"]> }
-    ) => Promise<{ added: number }>;
-    remove: (
-        id: Reference<GroupT["group"]>,
-        options: { items: Reference<GroupT["resource"]> }
-    ) => Promise<{ removed: number }>;
-    listItems: (
-        id: Reference<GroupT["group"]>,
-        skip: number,
-        limit: number
-    ) => Promise<Pick<GroupT["resource"], ReadKey>[]>;
-};
-
-export const PermissionPrefix = "perm";
-type Agent = User | UserGroup;
-export type CommonBasedPermission<
-    Target extends Resource,
-    TargetMethodKey extends string
-> = CommonBasedResource<
-    typeof PermissionPrefix,
-    {
-        agent: Reference<Agent>;
-        target: Reference<Target>;
-        method: TargetMethodKey;
-    }
->;
-
-export type ResourcePermission =
-    | UserPermission
-    | UserGroupPermission
-    | CouponPermission
-    | CouponRequestPermission
-    | CouponGroupPermission;

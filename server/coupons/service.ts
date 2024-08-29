@@ -1,7 +1,7 @@
 import { Reference } from "ang-coupons-types";
-import { Coupon } from "ang-coupons-types/coupons";
+import { Coupon, CouponMethods } from "ang-coupons-types/coupons";
 
-import { generateID } from "../util";
+import { RequestMethods, generateID } from "../util";
 import { putItem, updateItem } from "../aws";
 
 export const createCoupon = async (
@@ -35,3 +35,6 @@ export const updateCouponUsage = async (
     id: Reference<Coupon>,
     increment: number
 ) => {};
+
+
+export const couponModule: RequestMethods<CouponMethods>

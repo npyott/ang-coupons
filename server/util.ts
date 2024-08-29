@@ -31,3 +31,7 @@ export const alphabetNumber = (n: number): string => {
     const digit = alphabet[remainder];
     return `${alphabetNumber(quotient)}${digit}`;
 };
+
+export type RequestMethods<ResourceMethods> = {
+    [Key in keyof ResourceMethods]: (payload: unknown) => ResourceMethods[Key];
+};
