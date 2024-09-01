@@ -1,9 +1,7 @@
 import {
-    GroupedResource,
     PrefixFromID,
     Reference,
     Resource,
-    ResourceGroupMethods,
     ResourceMethods,
 } from "ang-coupons-types";
 
@@ -90,13 +88,14 @@ export const createAuthenticatedFetch =
 
 export const defaultResourceImplementation = <
     RT extends Resource,
-    UpdateKey extends keyof RT = keyof RT,
-    ReadKey extends keyof RT = keyof RT
+    CreateKey extends keyof RT,
+    ReadKey extends keyof RT,
+    UpdateKey extends keyof RT
 >(
     prefix: PrefixFromID<Reference<RT>>,
     validResponse: (res: unknown) => Pick<RT, ReadKey>,
     authenticatedFetch: ReturnType<typeof createAuthenticatedFetch>
-): ResourceMethods<RT, UpdateKey, ReadKey> => ({
+): ResourceMethods<RT, CreateKey, ReadKey, UpdateKey> => ({
     async create(options) {
         const res = await authenticatedFetch({
             path: `/${prefix}`,
@@ -152,73 +151,5 @@ export const defaultResourceImplementation = <
         }
 
         return res.map(validResponse);
-    },
-});
-
-export const defaultResourceGroupImplementation = <
-    GroupT extends GroupedResource,
-    ReadKey extends keyof GroupT["resource"] = keyof GroupT["resource"]
->(
-    prefix: PrefixFromID<Reference<GroupT["group"]>>,
-    validResourceResponse: (res: unknown) => Pick<GroupT["resource"], ReadKey>,
-    authenticatedFetch: ReturnType<typeof createAuthenticatedFetch>
-): ResourceGroupMethods<GroupT, ReadKey> => ({
-    async add(id, options) {
-        const res = await authenticatedFetch({
-            path: `/${prefix}/${id}`,
-            method: "PUT",
-            body: options,
-            contentType: "application/json",
-        });
-
-        if (
-            typeof res !== "object" ||
-            !res ||
-            !("added" in res) ||
-            typeof res.added !== "number"
-        ) {
-            throw new TypeError();
-        }
-
-        return {
-            added: res.added,
-        };
-    },
-    async remove(id, options) {
-        const res = await authenticatedFetch({
-            path: `/${prefix}/${id}`,
-            method: "PUT",
-            body: options,
-            contentType: "application/json",
-        });
-
-        if (
-            typeof res !== "object" ||
-            !res ||
-            !("removed" in res) ||
-            typeof res.removed !== "number"
-        ) {
-            throw new TypeError();
-        }
-
-        return {
-            removed: res.removed,
-        };
-    },
-    async listItems(id, skip, limit) {
-        const res = await authenticatedFetch({
-            path: `/${prefix}/${id}`,
-            method: "GET",
-            queryParameters: {
-                skip,
-                limit,
-            },
-        });
-
-        if (!Array.isArray(res)) {
-            throw new TypeError("Expected an array.");
-        }
-
-        return res.map(validResourceResponse);
     },
 });

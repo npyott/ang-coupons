@@ -1,21 +1,15 @@
 import {
     User,
-    UserGroup,
-    UserGroupMethods,
     UserMethods,
     UserReadKey,
     UserCreateKey,
-    UserGroupCreateKey,
+    UserUpdateKey,
 } from "ang-coupons-types/users";
 import {
     Validations,
-    oneOfValidID,
     validDate,
     validEmail,
     validID,
-    validNumber,
-    validNumberIntegral,
-    validNumberWithinRange,
     validString,
     validateObject,
 } from "ang-coupons-common/validation";
@@ -23,7 +17,6 @@ import { compose } from "ang-coupons-common/functional-utils";
 
 import {
     defaultResourceImplementation,
-    defaultResourceGroupImplementation,
     createAuthenticatedFetch,
 } from "./common";
 
@@ -41,7 +34,8 @@ export const createUserModule = (
     const defaultMethods = defaultResourceImplementation<
         User,
         UserCreateKey,
-        UserReadKey
+        UserReadKey,
+        UserUpdateKey
     >(
         "user",
         (res) => validateObject<User, UserReadKey>(res, userValidations),
@@ -81,47 +75,5 @@ export const createUserModule = (
 
             throw new TypeError();
         },
-    };
-};
-
-export const userGroupValidations: Validations<UserGroup> = {
-    _id: compose(validString, (x) => validID(x, "user_group")),
-    createdAt: validDate,
-    updatedAt: validDate,
-    name: validString,
-    parent: compose(validString, (x) =>
-        oneOfValidID(x, ["user", "user_group"])
-    ),
-    count: compose(validNumber, validNumberIntegral, (x) =>
-        validNumberWithinRange(x, 0, Number.MAX_SAFE_INTEGER)
-    ),
-};
-
-export const createUserGroupModule = (
-    authenticatedFetch: ReturnType<typeof createAuthenticatedFetch>
-): UserGroupMethods => {
-    const defaultResource = defaultResourceImplementation<
-        UserGroup,
-        UserGroupCreateKey
-    >(
-        "user_group",
-        (res) => validateObject(res, userGroupValidations),
-        authenticatedFetch
-    );
-    const defaultGroup = defaultResourceGroupImplementation<
-        {
-            resource: User;
-            group: UserGroup;
-        },
-        UserReadKey
-    >(
-        "user_group",
-        (res) => validateObject<User, UserReadKey>(res, userValidations),
-        authenticatedFetch
-    );
-
-    return {
-        ...defaultResource,
-        ...defaultGroup,
     };
 };
