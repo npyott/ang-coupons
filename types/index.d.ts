@@ -41,11 +41,35 @@ export type Resource =
 
 export type Reference<RT extends Resource> = RT["_id"];
 
+type ReferenceKeys<RT, K extends keyof RT> = K extends "_id"
+    ? never
+    : RT[K] extends ID<Prefix> | ID<Prefix>[]
+    ? K
+    : never;
+
+type GenericReferenceSearch<RT> = {
+    [K in ReferenceKeys<RT, keyof RT>]?: RT[K] extends any[]
+        ? RT[K][number] | RT[K]
+        : RT[K] | RT[K][];
+};
+
+type A = GenericReferenceSearch<User>;
+
+export type CommonSearch<
+    RT extends Resource,
+    CustomSearch extends Record<string, any>
+> = {
+    createdAt?: { before?: Date; after?: Date };
+    updatedAt?: { before?: Date; after?: Date };
+} & GenericReferenceSearch<RT> &
+    CustomSearch;
+
 export type ResourceMethods<
     RT extends Resource,
     CreateKey extends keyof RT,
     ReadKey extends keyof RT,
-    UpdateKey extends keyof RT
+    UpdateKey extends keyof RT,
+    Search extends CommonSearch<RT, any>
 > = {
     create: (options: Pick<RT, CreateKey>) => Promise<Pick<RT, ReadKey>>;
     get: (id: Reference<RT>) => Promise<Pick<RT, ReadKey>>;
@@ -54,5 +78,9 @@ export type ResourceMethods<
         id: Reference<RT>,
         options: Pick<RT, UpdateKey>
     ) => Promise<Pick<RT, ReadKey>>;
-    list: (skip: number, limit: number) => Promise<Pick<RT, ReadKey>[]>;
+    list: (
+        skip: number,
+        limit: number,
+        search: Search
+    ) => Promise<Pick<RT, ReadKey>[]>;
 };

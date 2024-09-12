@@ -1,4 +1,9 @@
-import { CommonBasedResource, Reference, ResourceMethods } from ".";
+import {
+    CommonBasedResource,
+    CommonSearch,
+    Reference,
+    ResourceMethods,
+} from ".";
 import { Vendor } from "./vendors";
 
 export const UserPrefix = "user";
@@ -22,7 +27,18 @@ export type UserReadKey = keyof Pick<
 >;
 export type UserUpdateKey = UserCreateKey;
 export type UserMethods = Omit<
-    ResourceMethods<User, UserCreateKey, UserReadKey, UserUpdateKey>,
+    ResourceMethods<
+        User,
+        UserCreateKey,
+        UserReadKey,
+        UserUpdateKey,
+        CommonSearch<
+            User,
+            {
+                email?: string;
+            }
+        >
+    >,
     "list"
 > & {
     sendPasswordToken: (options: Pick<User, "email">) => Promise<boolean>;

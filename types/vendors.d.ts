@@ -1,4 +1,9 @@
-import { CommonBasedResource, Reference, ResourceMethods } from ".";
+import {
+    CommonBasedResource,
+    CommonSearch,
+    Reference,
+    ResourceMethods,
+} from ".";
 import { User } from "./users";
 
 export const VendorPrefix = "vendor";
@@ -16,7 +21,8 @@ export type VendorMethods = ResourceMethods<
     Vendor,
     VendorCreateKey,
     VendorReadKey,
-    VendorUpdateKey
+    VendorUpdateKey,
+    CommonSearch<Vendor, {}>
 > & {
     inviteUser: (
         id: Reference<Vendor>,

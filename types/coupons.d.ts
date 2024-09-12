@@ -1,4 +1,9 @@
-import { CommonBasedResource, Reference, ResourceMethods } from ".";
+import {
+    CommonBasedResource,
+    CommonSearch,
+    Reference,
+    ResourceMethods,
+} from ".";
 import { User } from "./users";
 import { Vendor } from "./vendors";
 
@@ -27,7 +32,8 @@ export type CouponMethods = ResourceMethods<
     Coupon,
     CouponCreateKey,
     CouponReadKey,
-    CouponUpdateKey
+    CouponUpdateKey,
+    CommonSearch<Coupon, { description?: string }>
 >;
 
 export const CouponProductPrefix = "coupon_product";
@@ -51,14 +57,9 @@ export type CouponProductMethods = ResourceMethods<
     CouponProduct,
     CouponProductCreateKey,
     CouponProductReadKey,
-    CouponProductUpdateKey
-> & {
-    listCoupons: (
-        id: Reference<CouponProduct>,
-        skip: number,
-        limit: number
-    ) => Promise<Pick<CouponProduct, CouponProductReadKey>[]>;
-};
+    CouponProductUpdateKey,
+    CommonSearch<CouponProduct, {}>
+>;
 
 export const CouponRequestPrefix = "coupon_request";
 export type CouponRequest = CommonBasedResource<
@@ -83,7 +84,8 @@ export type CouponRequestMethods = Omit<
         CouponRequest,
         CouponRequestCreateKey,
         CouponRequestReadKey,
-        never
+        never,
+        CommonSearch<CouponRequest, {}>
     >,
     "update"
 > & {
