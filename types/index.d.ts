@@ -1,23 +1,13 @@
 import {
     Coupon,
-    CouponGroup,
-    CouponGroupPermission,
-    CouponGroupPrefix,
-    CouponPermission,
     CouponPrefix,
     CouponRequest,
-    CouponRequestPermission,
     CouponRequestPrefix,
+    CouponProduct,
+    CouponProductPrefix,
 } from "./coupons";
 import { Session, SessionPrefix } from "./sessions";
-import {
-    User,
-    UserGroup,
-    UserGroupPermission,
-    UserGroupPrefix,
-    UserPermission,
-    UserPrefix,
-} from "./users";
+import { User, UserPrefix } from "./users";
 import { Vendor, VendorPrefix } from "./vendors";
 
 export type ID<PrefixT extends Prefix> = `${PrefixT}-${string}`;
@@ -36,11 +26,18 @@ export type CommonBasedResource<PrefixT extends Prefix, T> = T &
 export type Prefix =
     | typeof UserPrefix
     | typeof CouponPrefix
+    | typeof CouponProductPrefix
     | typeof CouponRequestPrefix
     | typeof VendorPrefix
     | typeof SessionPrefix;
 
-export type Resource = User | Coupon | CouponRequest | Vendor | Session;
+export type Resource =
+    | User
+    | Coupon
+    | CouponProduct
+    | CouponRequest
+    | Vendor
+    | Session;
 
 export type Reference<RT extends Resource> = RT["_id"];
 

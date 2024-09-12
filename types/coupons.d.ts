@@ -12,12 +12,13 @@ export type Coupon = CommonBasedResource<
         requestValidDuration: number;
         imageSrc: string;
         vendor: Reference<Vendor>;
+        product: Reference<CouponProduct>;
     }
 >;
 
 export type CouponCreateKey = keyof Pick<
     Coupon,
-    "description" | "limit" | "requestValidDuration" | "imageSrc"
+    "product" | "description" | "limit" | "requestValidDuration" | "imageSrc"
 >;
 export type CouponReadKey = keyof Coupon;
 export type CouponUpdateKey = keyof Pick<Coupon, "description" | "imageSrc">;
@@ -28,6 +29,36 @@ export type CouponMethods = ResourceMethods<
     CouponReadKey,
     CouponUpdateKey
 >;
+
+export const CouponProductPrefix = "coupon_product";
+export type CouponProduct = CommonBasedResource<
+    typeof CouponProductPrefix,
+    Pick<
+        Coupon,
+        "description" | "limit" | "requestValidDuration" | "imageSrc"
+    > & {
+        vendor: Reference<Vendor>;
+    }
+>;
+
+export type CouponProductCreateKey = keyof Pick<
+    CouponProduct,
+    "description" | "limit" | "requestValidDuration" | "vendor" | "imageSrc"
+>;
+export type CouponProductReadKey = keyof CouponProduct;
+export type CouponProductUpdateKey = CouponProductCreateKey;
+export type CouponProductMethods = ResourceMethods<
+    CouponProduct,
+    CouponProductCreateKey,
+    CouponProductReadKey,
+    CouponProductUpdateKey
+> & {
+    listCoupons: (
+        id: Reference<CouponProduct>,
+        skip: number,
+        limit: number
+    ) => Promise<Pick<CouponProduct, CouponProductReadKey>[]>;
+};
 
 export const CouponRequestPrefix = "coupon_request";
 export type CouponRequest = CommonBasedResource<

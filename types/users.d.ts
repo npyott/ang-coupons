@@ -11,14 +11,14 @@ export type User = CommonBasedResource<
             hash: string;
             updatedAt: Date;
         };
-        vendors: Set<Reference<Vendor>>;
+        vendors: Reference<Vendor>[];
     }
 >;
 
 export type UserCreateKey = keyof Pick<User, "name" | "email">;
 export type UserReadKey = keyof Pick<
     User,
-    "_id" | "createdAt" | "updatedAt" | "name" | "email"
+    "_id" | "createdAt" | "updatedAt" | "name" | "email" | "vendors"
 >;
 export type UserUpdateKey = UserCreateKey;
 export type UserMethods = Omit<
