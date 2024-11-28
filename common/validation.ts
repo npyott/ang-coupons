@@ -1,4 +1,4 @@
-import { ID, Prefix, Resource } from "ang-coupons-types";
+import { ID, Prefix } from "ang-coupons-types/index";
 
 // ID validation
 export const validID = <PrefixT extends Prefix>(x: string, prefix: PrefixT) => {
@@ -25,12 +25,11 @@ export const oneOfValidID = <PrefixesT extends readonly Prefix[]>(
 export const someValidID = (x: string) =>
     oneOfValidID(x, [
         "coupon",
-        "coupon_group",
+        "coupon_product",
         "coupon_request",
-        "perm",
-        "session",
         "user",
-        "user_group",
+        "vendor",
+        "session",
     ]);
 
 // Boolean validation
