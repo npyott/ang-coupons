@@ -90,12 +90,13 @@ export const defaultResourceImplementation = <
     RT extends Resource,
     CreateKey extends keyof RT,
     ReadKey extends keyof RT,
-    UpdateKey extends keyof RT
+    UpdateKey extends keyof RT,
+    Search
 >(
     prefix: PrefixFromID<Reference<RT>>,
     validResponse: (res: unknown) => Pick<RT, ReadKey>,
     authenticatedFetch: ReturnType<typeof createAuthenticatedFetch>
-): ResourceMethods<RT, CreateKey, ReadKey, UpdateKey> => ({
+): ResourceMethods<RT, CreateKey, ReadKey, UpdateKey, Search> => ({
     async create(options) {
         const res = await authenticatedFetch({
             path: `/${prefix}`,
@@ -136,13 +137,14 @@ export const defaultResourceImplementation = <
 
         return validResponse(res);
     },
-    async list(skip, limit) {
+    async list(skip, limit, search) {
         const res = await authenticatedFetch({
             path: `/${prefix}`,
             method: "GET",
             queryParameters: {
                 skip,
                 limit,
+                search,
             },
         });
 
