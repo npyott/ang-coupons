@@ -10,7 +10,6 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@types/ang-coupons-types": "file:../types",
-        "@types/node": "^20.12.7"
+        "@types/ang-coupons-types": "file:../types"
     }
 }
