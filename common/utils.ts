@@ -107,3 +107,87 @@ export const flattenObjectEntries = (
 
 export const flattenObject = (o: Object) =>
     flattenObjectEntries(Object.entries(o), o, []);
+
+export const unFlattenObjectEntries = (
+    flattenedEntries: [string[], Primitive | Function | Circular][],
+    rootObject: object,
+    parentObjectsWithNames: [Object, string][]
+): [string, unknown][] => {
+    const simpleEntries: [string, Primitive | Function][] = [];
+    const rootEntries: [string, object][] = [];
+    const circularEntries: [string, string[]][] = [];
+    const objectEntries: [string[], Primitive | Function | Circular][] = [];
+
+    for (const [keys, v] of flattenedEntries) {
+        const [key] = keys;
+        if (keys.length > 1) {
+            objectEntries.push([keys, v]);
+        } else if (v instanceof Circular) {
+            if (v.parentPath === ROOT) {
+                rootEntries.push([key, rootObject]);
+            } else {
+                circularEntries.push([key, v.parentPath]);
+            }
+        } else {
+            simpleEntries.push([key, v]);
+        }
+    }
+
+    const transformedCircularEntries = circularEntries.map(
+        ([key, value]): [string, object] => {
+            const parentPathLength = value.length;
+            const referencedObject =
+                parentObjectsWithNames[parentPathLength - 1][0];
+
+            return [key, referencedObject];
+        }
+    );
+
+    const mainKeyToFlattenedSubEntries = new Map<
+        string,
+        [string[], Primitive | Function | Circular][]
+    >();
+    for (const [[topKey, ...subKeys], value] of objectEntries) {
+        const commonSubEntries = mainKeyToFlattenedSubEntries.get(topKey) ?? [];
+        commonSubEntries.push([subKeys, value]);
+        mainKeyToFlattenedSubEntries.set(topKey, commonSubEntries);
+    }
+
+    const transformedObjectEntries = mainKeyToFlattenedSubEntries
+        .entries()
+        .map(([key, flattenedSubEntries]): [string, object] => {
+            const object: object = {};
+            parentObjectsWithNames.push([object, key]);
+            const subEntries = unFlattenObjectEntries(
+                flattenedSubEntries,
+                rootObject,
+                parentObjectsWithNames
+            );
+            parentObjectsWithNames.pop();
+
+            for (const [subKey, value] of subEntries) {
+                (object as any)[subKey] = value;
+            }
+
+            return [key, object];
+        })
+        .toArray();
+
+    return (simpleEntries as [string, unknown][])
+        .concat(rootEntries)
+        .concat(transformedCircularEntries)
+        .concat(transformedObjectEntries);
+};
+
+export const unFlattenObject = (
+    flattenedEntries: [string[], Primitive | Function | Circular][]
+): object => {
+    const object: object = {};
+    const entries = unFlattenObjectEntries(flattenedEntries, object, []);
+
+    for (const [key, value] of entries) {
+        (object as any)[key] = value;
+    }
+
+    return object;
+};
